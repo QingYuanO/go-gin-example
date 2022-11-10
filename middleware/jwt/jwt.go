@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"go-gin-example/pkg/e"
+	"go-gin-example/pkg/logging"
 	"go-gin-example/pkg/util"
 	"net/http"
 	"time"
@@ -27,12 +28,13 @@ func JWT() gin.HandlerFunc {
 			}
 		}
 		if code != e.SUCCESS {
+			msg := e.GetMsg(code)
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"code": code,
-				"msg":  e.GetMsg(code),
+				"msg":  msg,
 				"data": data,
 			})
-
+			logging.Info(msg)
 			ctx.Abort()
 			return
 		}
